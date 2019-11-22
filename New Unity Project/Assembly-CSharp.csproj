@@ -63,7 +63,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\HeadCollider.cs" />
+    <Compile Include="Assets\LegsCollider.cs" />
+    <Compile Include="Assets\Scripts\CharacterControls.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
+    <Compile Include="Assets\Scripts\PvPGameManager.cs" />
+    <Compile Include="Assets\TorsoCollider.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/New folder/ByvGamesTestTask/New Unity Project/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
