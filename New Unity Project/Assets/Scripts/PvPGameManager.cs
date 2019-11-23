@@ -10,6 +10,7 @@ public class PvPGameManager : MonoBehaviour
     void Start()
     {
         PauseMenu.SetActive(false);
+        Time.timeScale = 1;
     }
     public void PauseGame()
     {

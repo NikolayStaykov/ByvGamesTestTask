@@ -1,42 +1,69 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class CharacterControls : MonoBehaviour
 {
-    private bool Side;
+    public bool Side;
     private int Health;
     public GameObject[] Hearts;
+    public bool AttackCooldown;
+    public GameObject Bullet;
+    public GameObject Gun;
+    private bool JumpAllowed;
+    public ParticleSystem BloodSpray;
+    private Vector3 BulletOffset;
+    private Vector3 BloodSpraySpawn;
     void Start()
     {
-        if(this.GetComponentInParent<Transform>().position.x < Screen.width / 2)
+        if(Side)
         {
             Side = false;
+            BulletOffset.x = 5.76f;
+            BulletOffset.y = 1.9f;
+            BloodSpraySpawn.x = 10.7f;
         }
         else
         {
             Side = true;
+            BulletOffset.x = 2.95f;
+            BulletOffset.y = 2.24f;
+            BloodSpraySpawn.x = -10.4f;
         }
         Health = 5;
+        AttackCooldown = true;
     }
 
     void Update()
     {
-        Touch touch = Input.GetTouch(0); 
-        if(touch.position.x < Screen.width / 2 && Side == false)
+        Touch[] touches = Input.touches;
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            gameObject.transform.Translate(0, 0.5f, 0);
-        }
-        else if (touch.position.x > Screen.width / 2 && Side == true)
-        {
-            gameObject.transform.Translate(0, 0.5f, 0);
+            if (touches[i].position.x < Screen.width / 2 && Side == false && JumpAllowed)
+            {
+                if(gameObject.transform.position.y > -2.75f)
+                {
+                    JumpAllowed = false;
+                }
+                gameObject.transform.Translate(0, 0.5f, 0);
+            }
+            else if (touches[i].position.x > Screen.width / 2 && Side == true && JumpAllowed)
+            {
+                if (gameObject.transform.position.y > -2.75f)
+                {
+                    JumpAllowed = false;
+                }
+                gameObject.transform.Translate(0, 0.5f, 0);
+            }
         }
     }
 
-    public void TakeDamage(int DamageRecieved)
+    public void TakeDamage(int DamageRecieved,Vector3 HitLocation)
     {
         int Damage = DamageRecieved;
-        while(Health > 0 || Damage != 0)
+        BloodSpraySpawn.y = HitLocation.y;
+        BloodSpray.transform.position = BloodSpraySpawn;
+        BloodSpray.Play();
+        while(Health > 0 && Damage > 0)
         {
             Health--;
             Hearts[Health].SetActive(false);
@@ -47,8 +74,82 @@ public class CharacterControls : MonoBehaviour
             Die();
         }
     }
+
+    public void HealDamage(int HealPoints)
+    {
+        int ToHeal = HealPoints;
+        while (Health < 5 && ToHeal > 0)
+        {
+            ToHeal--;
+            Hearts[Health].SetActive(true);
+            Health++;
+        }
+    }
     private void Die()
     {
+        AttackCooldown = false;
+        JumpAllowed = false;
+        HingeJoint2D[] joints = gameObject.GetComponentsInChildren<HingeJoint2D>();
+        Rigidbody2D[] rigidbodies = gameObject.GetComponentsInChildren<Rigidbody2D>();
+        foreach (HingeJoint2D joint in joints)
+        {
+            joint.useLimits = false;
+        }
+        if(Side)
+        {
+            foreach(Rigidbody2D rigidbody in rigidbodies)
+            {
+                rigidbody.AddForce(new Vector2(-30, 0), ForceMode2D.Force);
+            }
+        }
+        else
+        {
+            foreach (Rigidbody2D rigidbody in rigidbodies)
+            {
+                rigidbody.AddForce(new Vector2(30, 0), ForceMode2D.Force);
+            }
+        }
+        Invoke("EndGame", 1f);
+    }
+
+    public void DeathByExplosion()
+    {
+        AttackCooldown = false;
+        JumpAllowed = false;
+        HingeJoint2D[] joints = gameObject.GetComponentsInChildren<HingeJoint2D>();
+        Rigidbody2D[] rigidbodies = gameObject.GetComponentsInChildren<Rigidbody2D>();
+        foreach (HingeJoint2D joint in joints)
+        {
+            Destroy(joint);
+        }
+        foreach (Rigidbody2D rigidbody in rigidbodies)
+        {
+            rigidbody.AddForce(new Vector2(Random.Range(-500,500), Random.Range(-500, 500)), ForceMode2D.Force);
+        }
+        Invoke("EndGame", 1f);
+    }
+    private void EndGame()
+    {
         FindObjectOfType<PvPGameManager>().GameEnd();
+    }
+
+    public void FireProjectile()
+    {
+        if (AttackCooldown)
+        {
+            Vector3 PointToSpawn = Gun.transform.position + BulletOffset;
+            Instantiate(Bullet, PointToSpawn, Bullet.transform.rotation, null);
+            AttackCooldown = false;
+            Invoke("ResetCooldown", 1.25f);
+        }
+    }
+
+    private void ResetCooldown()
+    {
+        AttackCooldown = true;
+    }
+    public void JumpReset()
+    {
+        JumpAllowed = true;
     }
 }
