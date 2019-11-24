@@ -19,7 +19,7 @@ public class PvECharacterControls : MonoBehaviour
     }
     void Update()
     {
-        if (Input.touchCount == 1 && AttackAllowed)
+        if (Input.touchCount == 1 && AttackAllowed == true)
         {
             Touch touch = Input.GetTouch(0);
             if(touch.phase == TouchPhase.Began)
@@ -34,13 +34,9 @@ public class PvECharacterControls : MonoBehaviour
             else if(touch.phase == TouchPhase.Ended)
             {
                 SwipeEnd = touch.position;
+                ThrowAxe();
             }
         }
-        if(Vector3.Distance(SwipeStart,SwipeEnd) > MinimumSwipeDistance)
-        {
-            ThrowAxe();
-        }
-
     }
 
     private void ThrowAxe()
@@ -49,9 +45,10 @@ public class PvECharacterControls : MonoBehaviour
         AttackAllowed = false;
         GameObject SpawnedAxe = Instantiate(Axe, AxeSpawnPoint, Axe.transform.rotation, null);
         Vector2 Force;
-        Force.x = SwipeEnd.x - SwipeStart.x;
-        Force.y = SwipeEnd.y - SwipeStart.y;
+        Force.x = (SwipeEnd.x - SwipeStart.x) * 100;
+        Force.y = (SwipeEnd.y - SwipeStart.y) * 100;
         SpawnedAxe.GetComponent<Rigidbody2D>().AddForce(Force);
+        Invoke("AttackCoolDown",1.5f);
     }
 
     private void AttackCoolDown()

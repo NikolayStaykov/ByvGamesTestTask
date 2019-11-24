@@ -47,7 +47,7 @@ public class CharacterControls : MonoBehaviour
         Touch[] touches = Input.touches;
         foreach(Touch touch in touches)
         {
-            if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
+            if (EventSystem.current.currentSelectedGameObject == null)
             {
                 if (touch.position.x < Screen.width / 2 && Side == false && JumpAllowed)
                 {
