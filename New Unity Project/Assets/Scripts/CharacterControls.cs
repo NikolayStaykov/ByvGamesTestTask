@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 public class CharacterControls : MonoBehaviour
 {
     public bool Side;
@@ -43,23 +45,26 @@ public class CharacterControls : MonoBehaviour
     void Update()
     {
         Touch[] touches = Input.touches;
-        for (int i = 0; i < Input.touchCount; i++)
+        foreach(Touch touch in touches)
         {
-            if (touches[i].position.x < Screen.width / 2 && Side == false && JumpAllowed)
+            if (!EventSystem.current.IsPointerOverGameObject(touch.fingerId))
             {
-                if(gameObject.transform.position.y > -2.75f)
+                if (touch.position.x < Screen.width / 2 && Side == false && JumpAllowed)
                 {
-                    JumpAllowed = false;
+                    if (gameObject.transform.position.y > -2.75f)
+                    {
+                        JumpAllowed = false;
+                    }
+                    gameObject.transform.Translate(0, 2, 0);
                 }
-                gameObject.transform.Translate(0, 0.5f, 0);
-            }
-            else if (touches[i].position.x > Screen.width / 2 && Side == true && JumpAllowed)
-            {
-                if (gameObject.transform.position.y > -2.75f)
+                else if (touch.position.x > Screen.width / 2 && Side == true && JumpAllowed)
                 {
-                    JumpAllowed = false;
+                    if (gameObject.transform.position.y > -2.75f)
+                    {
+                        JumpAllowed = false;
+                    }
+                    gameObject.transform.Translate(0, 2, 0);
                 }
-                gameObject.transform.Translate(0, 0.5f, 0);
             }
         }
     }

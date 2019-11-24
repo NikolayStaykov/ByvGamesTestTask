@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Bomb
   - Rocket
+  - Axe
   layers:
   - Default
   - TransparentFX
