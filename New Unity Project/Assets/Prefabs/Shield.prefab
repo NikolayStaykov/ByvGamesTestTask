@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8006116738959571991}
   - component: {fileID: 5559088690801544240}
   - component: {fileID: 3906848256543761887}
-  - component: {fileID: 6426253302356466637}
   - component: {fileID: 4481370926860915859}
+  - component: {fileID: 383410416885645292}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -94,7 +94,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -102,8 +102,20 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!58 &6426253302356466637
+  m_Constraints: 3
+--- !u!114 &4481370926860915859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589637639676688522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9ce4093c283686448d4246e547d6fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &383410416885645292
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,15 +131,3 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1.28
---- !u!114 &4481370926860915859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4589637639676688522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9ce4093c283686448d4246e547d6fb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

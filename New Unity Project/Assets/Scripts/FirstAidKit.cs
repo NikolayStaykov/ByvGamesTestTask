@@ -39,6 +39,7 @@ public class FirstAidKit : MonoBehaviour
             {
                 RightCharcter.HealDamage(3);
             }
+            FindObjectOfType<PvPGameManager>().SpawnItemAllowed = true;
             Destroy(gameObject);
         }
     }

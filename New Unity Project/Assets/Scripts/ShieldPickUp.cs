@@ -24,14 +24,18 @@ public class ShieldPickUp : MonoBehaviour
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<LeftBulletScript>())
+        if (collision.gameObject.tag == "Bullet")
         {
-            Instantiate(Shield, LeftCharcter.gameObject.transform);
+            if (collision.gameObject.GetComponent<LeftBulletScript>())
+            {
+                Instantiate(Shield, LeftCharcter.gameObject.transform);
+            }
+            else
+            {
+                Instantiate(Shield, RightCharcter.gameObject.transform);
+            }
+            FindObjectOfType<PvPGameManager>().SpawnItemAllowed = true;
+            Destroy(gameObject);
         }
-        else if (collision.gameObject.GetComponent<RightBulletScript>())
-        {
-            Instantiate(Shield, RightCharcter.gameObject.transform);
-        }
-        Destroy(gameObject);
     }
 }

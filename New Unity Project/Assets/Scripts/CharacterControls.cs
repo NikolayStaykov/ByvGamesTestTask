@@ -13,24 +13,31 @@ public class CharacterControls : MonoBehaviour
     public ParticleSystem BloodSpray;
     private Vector3 BulletOffset;
     private Vector3 BloodSpraySpawn;
+    private bool WeaponSwitch;
+    public GameObject Bazooka;
+    public GameObject Rocket;
+    private Vector3 RocketOffset;
     void Start()
     {
         if(Side)
         {
-            Side = false;
-            BulletOffset.x = 5.76f;
+            BulletOffset.x = 3.5f;
             BulletOffset.y = 1.9f;
             BloodSpraySpawn.x = 10.7f;
+            RocketOffset.x = 3.62f;
+            RocketOffset.y = -2.53f;
         }
         else
         {
-            Side = true;
-            BulletOffset.x = 2.95f;
+            BulletOffset.x = 6.4f;
             BulletOffset.y = 2.24f;
             BloodSpraySpawn.x = -10.4f;
+            RocketOffset.x = 0.49f;
+            RocketOffset.y = -2.62f;
         }
         Health = 5;
         AttackCooldown = true;
+        WeaponSwitch = false;
     }
 
     void Update()
@@ -135,12 +142,25 @@ public class CharacterControls : MonoBehaviour
 
     public void FireProjectile()
     {
-        if (AttackCooldown)
+        if (WeaponSwitch)
         {
-            Vector3 PointToSpawn = Gun.transform.position + BulletOffset;
-            Instantiate(Bullet, PointToSpawn, Bullet.transform.rotation, null);
-            AttackCooldown = false;
-            Invoke("ResetCooldown", 1.25f);
+            if (AttackCooldown)
+            {
+                Vector3 PointToSpawn = Bazooka.transform.position + RocketOffset;
+                Instantiate(Rocket, PointToSpawn, Rocket.transform.rotation, null);
+                AttackCooldown = false;
+                Invoke("ResetCooldown", 1.25f);
+            }
+        }
+        else
+        {
+            if (AttackCooldown)
+            {
+                Vector3 PointToSpawn = Gun.transform.position + BulletOffset;
+                Instantiate(Bullet, PointToSpawn, Bullet.transform.rotation, null);
+                AttackCooldown = false;
+                Invoke("ResetCooldown", 1.25f);
+            }
         }
     }
 
@@ -151,5 +171,19 @@ public class CharacterControls : MonoBehaviour
     public void JumpReset()
     {
         JumpAllowed = true;
+    }
+
+    public void SwitchToBazooka()
+    {
+        WeaponSwitch = true;
+        Gun.SetActive(false);
+        Bazooka.SetActive(true);
+        Invoke("SwitchToGun", 5);
+    }
+    public void SwitchToGun()
+    {
+        WeaponSwitch = false;
+        Gun.SetActive(true);
+        Bazooka.SetActive(false);
     }
 }

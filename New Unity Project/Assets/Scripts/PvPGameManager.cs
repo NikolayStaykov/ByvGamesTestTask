@@ -7,10 +7,17 @@ public class PvPGameManager : MonoBehaviour
 {
     public GameObject PauseMenu;
     public GameObject ContinueButton;
+    public GameObject FirstAidKit;
+    public GameObject Bomb;
+    public GameObject Shield;
+    public GameObject Bazooka;
+    public bool SpawnItemAllowed;
     void Start()
     {
         PauseMenu.SetActive(false);
         Time.timeScale = 1;
+        SpawnItemAllowed = true;
+        Invoke("SpawnItem", 3);
     }
     public void PauseGame()
     {
@@ -37,4 +44,32 @@ public class PvPGameManager : MonoBehaviour
         PauseMenu.SetActive(true);
     }
 
+    private void SpawnItem()
+    {
+        if (SpawnItemAllowed)
+        {
+            int ItemToSpawn = Random.Range(1, 5);
+            switch (ItemToSpawn)
+            {
+                case 1:
+                    Instantiate(FirstAidKit, Vector3.zero, FirstAidKit.transform.rotation, null);
+                    break;
+                case 2:
+                    Instantiate(Bomb, Vector3.zero, Bomb.transform.rotation, null);
+                    break;
+                case 3:
+                    Instantiate(Shield, Vector3.zero, Shield.transform.rotation, null);
+                    break;
+                case 4:
+                    Instantiate(Bazooka, Vector3.zero, Bazooka.transform.rotation, null);
+                    break;
+            }
+            SpawnItemAllowed = false;
+            Invoke("SpawnItem", 6);
+        }
+        else
+        {
+            Invoke("SpawnItem", 3);
+        }
+    }
 }

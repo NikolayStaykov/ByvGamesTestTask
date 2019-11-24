@@ -18,6 +18,7 @@ public class Bomb : MonoBehaviour
         }
         else
         {
+            FindObjectOfType<PvPGameManager>().SpawnItemAllowed = true;
             Destroy(gameObject);
         }
 
